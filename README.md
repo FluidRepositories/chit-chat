@@ -1,6 +1,7 @@
 ![chit-chat](https://images2.imgbox.com/b1/04/2teuWGV5_o.png)
 # chit-chat
 A complete, better replacement of the chat system in GTA:O.  
+![demo](https://cdn.discordapp.com/attachments/1028029718840217620/1028030054900441098/unknown.png)  
 Chit-Chat hides GTA:O's chat and replaces it with a new, better, GUI-based one. Chit-Chat allows you to:  
 - Mute players  
 - Rate-limit the chat to prevent seeing spam  
