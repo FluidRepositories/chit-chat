@@ -35,29 +35,85 @@ end
 
 
 local main_root = menu.my_root()
-regular_coloring_root = main_root:list("Colors", {}, "Spice things up")
-conditional_coloring_root = regular_coloring_root:list("Conditional coloring", {}, "Conditionally color player names based on criteria. In hierarchy. Me > Modders > Friends > Strangers")
-tags_root = main_root:list("Tags", {}, "Give everyone tags based off certain criteria")
-general_settings = main_root:list("General settings", {}, "Max chat length, etc")
+local regular_coloring_root = main_root:list("Colors", {}, "Spice things up")
+local conditional_coloring_root = regular_coloring_root:list("Conditional coloring", {}, "Conditionally color player names based on criteria. In hierarchy. Me > Modders > Friends > Strangers")
+local tags_root = main_root:list("Tags", {}, "Give everyone tags based off certain criteria")
+local general_settings = main_root:list("General settings", {}, "Max chat length, etc")
 
-max_chat_len = 254
+local max_chat_len = 254
 general_settings:slider("Max chat length", {"chatmaxlength"}, "Anything over this will automatically be trimmed down. Does not apply to your chats.", 1, 254, 254, 1, function(value)
     max_chat_len = value
 end)
 
-max_chats = 5
+local max_chats = 5
 general_settings:slider("Max chats", {"chatmaxchats"}, "The max chats that can be displayed/in history. Anything over this value will not be shown.", 1, 5, 5, 1, function(value)
     max_chats = value
 end)
 
-display_time = 5
+local display_time = 5
 general_settings:slider("Display for x seconds", {"chatdisptime"}, "The amount of time, in seconds, the chat box will be visible after the chat box is woken through a new message or typing.", 1, 300, 5, 1, function(value)
     display_time = 5
 end)
 
-chat_cooldown_ms = 1000
+local chat_cooldown_ms = 1000
 general_settings:slider("Chat cooldown", {"chatcooldown"}, "The cooldown between each chat, in milliseconds. Chats exceeding this will not be shown.", 0, 10000, 1000, 1, function(value)
     chat_cooldown_ms = value
+end)
+
+local pos_x = 0.68
+local pos_x_slider_focused = false
+local pos_x_slider = general_settings:slider_float("Position X", {"chatposx"}, ".", 0, 1000, 68, 1, function(value)
+    pos_x = value*0.01
+end)
+
+menu.on_focus(pos_x_slider, function()
+    pos_x_slider_focused = true 
+end)
+
+menu.on_blur(pos_x_slider, function()
+    pos_x_slider_focused = false
+end)
+
+local pos_y = 0.35
+local pos_y_slider_focused = false
+pos_y_slider = general_settings:slider_float("Position Y", {"chatposy"}, ".", 0, 1000, 35, 1, function(value)
+    pos_y = value*0.01
+end)
+
+menu.on_focus(pos_y_slider, function()
+    pos_y_slider_focused = true 
+end)
+
+menu.on_blur(pos_y_slider, function()
+    pos_y_slider_focused = false
+end)
+
+local text_scale = 0.5
+local text_scale_slider_focused = false
+text_scale_slider = general_settings:slider_float("Message text scale", {"chatmsgtxtscale"}, "", 0, 1000, 50, 1, function(value)
+    text_scale = value*0.01
+end)
+
+menu.on_focus(text_scale_slider, function()
+    text_scale_slider_focused = true 
+end)
+
+menu.on_blur(text_scale_slider, function()
+    text_scale_slider_focused = false
+end)
+
+local tag_scale = 0.4
+local tag_scale_slider_focused = false
+tag_scale_slider = general_settings:slider_float("Tag scale", {"chatmsgtagscale"}, ".", 0, 1000, 40, 1, function(value)
+    tag_scale = value*0.01
+end)
+
+menu.on_focus(tag_scale_slider, function()
+    tag_scale_slider_focused = true 
+end)
+
+menu.on_blur(tag_scale_slider, function()
+    tag_scale_slider_focused = false
 end)
 
 
@@ -271,17 +327,15 @@ menu.set_visible(teamsay, false)
 local chat_box_y_scale = 0.0    
 util.create_tick_handler(function()
     local min_rect_width = 0.3
-    local chat_box_x = 0.68 
-    local chat_box_y = 0.35
+    local chat_box_x = pos_x
+    local chat_box_y = pos_y
     local max_chat_box_x = min_rect_width - 0.025
-    local text_scale = 0.5
-    local tag_scale = 0.4
     if PAD.IS_CONTROL_JUST_RELEASED(245, 245) then 
         menu.show_command_box("say ")
     elseif PAD.IS_CONTROL_JUST_RELEASED(246, 246) then 
         menu.show_command_box("teamsay ")
     end
-    if menu.command_box_is_open() then 
+    if menu.command_box_is_open() or pos_x_slider_focused or pos_y_slider_focused or tag_scale_slider_focused or text_scale_slider_focused then 
         last_chat_time = os.time()
     end
     
