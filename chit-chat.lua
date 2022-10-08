@@ -405,5 +405,8 @@ function random_string(length)
     return table.concat(res)
 end
 
+util.on_stop(function()
+    HUD.MP_TEXT_CHAT_DISABLE(false)
+end)
 
 util.keep_running()
